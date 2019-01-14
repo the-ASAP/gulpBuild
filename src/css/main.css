@@ -1,0 +1,31 @@
+a {
+  display: flex;
+  font-size: 14px;
+}
+
+a span {
+  font-size: 30px;
+}
+
+a li {
+  font-weight: normal;
+}
+
+a .rofl {
+  font-size: 300px;
+}
+
+div {
+  color: blue;
+}
+p {
+  font-size: 14px;
+}
+
+p span {
+  font-size: 12px;
+}
+
+p li {
+  font-weight: normal;
+}
