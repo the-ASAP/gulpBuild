@@ -8,6 +8,8 @@ var gulp = require('gulp'),
 	imagemin = require('gulp-imagemin'),
 	autoprefixer = require('gulp-autoprefixer'),
 	del = require('del'),
+	plumber = require('gulp-plumber'),
+	gcmq = require('gulp-group-css-media-queries'),
 	browserSync = require('browser-sync'),
 	reload = browserSync.reload;
 
@@ -17,7 +19,9 @@ gulp.task('clean', function () {
 //CSS
 gulp.task('buildSass', function () {
 	return gulp.src('src/sass/*.scss')
-	    .pipe(sass().on('error', sass.logError))
+	    .pipe(sass({errLogToConsole: true}))
+	    .pipe(gcmq())
+	    .pipe(plumber())	    
 	    .pipe(concatCss('main.css'))
 	    .pipe(gulp.dest('src/css'));
 });
@@ -64,7 +68,7 @@ gulp.task('buildHtml', function(){
 //HTML
 //img
 gulp.task('imgmin', function() {
-  return gulp.src('src/img/*')
+  return gulp.src('src/img/**/*')
   .pipe(imagemin())
   .pipe(gulp.dest('build/img'))
   .pipe(reload({stream: true}));
