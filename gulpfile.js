@@ -10,6 +10,7 @@ var gulp = require('gulp'),
 	imageminSvgo = require('imagemin-svgo'),
 	autoprefixer = require('gulp-autoprefixer'),
 	del = require('del'),
+	babel = require('gulp-babel'),
 	plumber = require('gulp-plumber'),
 	gcmq = require('gulp-group-css-media-queries'),
 	browserSync = require('browser-sync'),
@@ -50,6 +51,9 @@ gulp.task('sass:watch', function () {
 gulp.task('buildJs', function () {
 	return gulp.src('src/js/*.js')
 		.pipe(concat('js/scripts.js'))
+		 .pipe(babel({
+            presets: ['@babel/env']
+        }))
 		.pipe(uglyfly())
 		.pipe(gulp.dest('build'))
 		.pipe(reload({stream: true}));
