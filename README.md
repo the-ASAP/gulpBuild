@@ -1,7 +1,7 @@
-# gulpBuild
-gulp build for Asap
+# Preset для проектов <br>
 
-Необходимые пакеты на ПК: Node.js - https://nodejs.org/en/
+Готовый шаблон для всех проектов с сборщиком GULP <br>
+Необходимые пакеты на ПК: Node.js - https://nodejs.org/en/ <br>
 
 Быстрый старт: <br>
 
