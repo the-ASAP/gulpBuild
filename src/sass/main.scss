@@ -12,7 +12,6 @@ html {
 }
 
 // Стилизация скролбра
-
 %scrollbar::-webkit-scrollbar {
     width: .5%;
     min-width: 8px;
@@ -25,7 +24,6 @@ html {
 %scrollbar::-webkit-scrollbar-thumb {
     border-left: 1px solid #F2F2F2;
     background: $accent;
-
 }
 
 body {
@@ -160,7 +158,7 @@ input {
 
     }
 }
-
+// Кнопка меню
 %burger {
     overflow: visible;
 
@@ -218,5 +216,32 @@ input {
                 transform: rotate(135deg);
             }
         }
+    }
+}
+
+// Шаблон для модального окна
+// .modal Обязательный класс для всех модальных окон, для попапов используем класс .popup который экстендит(@extend) класс modal или описываем свой.
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    @extend .flexbox;
+    justify-content: center;
+    //Вложенное окно с контентом, необходимо задать фиксированные размерыж
+    &__box{
+        padding: 2rem 3rem;
+        box-sizing: border-box;
+        position: relative;
+        background-color: $bgc;
+        overflow: auto;
+        max-height: 100%;
+        max-width: 100%;
+    }
+    // Кнопка закрытия
+    &__close{
+        @extend .close-btn;
     }
 }
