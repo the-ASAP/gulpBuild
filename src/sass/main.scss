@@ -159,6 +159,8 @@ input {
     }
 }
 // Кнопка меню
+// В разметке обязательно должна иметь внутренний span 
+// <button class="burger"><span></span></button>
 %burger {
     overflow: visible;
 
@@ -172,9 +174,8 @@ input {
         &,
         &::after,
         &::before {
-            background-color: $accent;
+            background-color: $gen;
             height: 1px;
-            width: 21px;
             transition: background-color .3s, transform .3s;
         }
 
@@ -242,6 +243,6 @@ input {
     }
     // Кнопка закрытия
     &__close{
-        @extend .close-btn;
+        @extend %close-btn;
     }
 }
