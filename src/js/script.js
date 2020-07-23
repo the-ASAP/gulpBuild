@@ -1,56 +1,59 @@
-// удаляемпрелодер при загрузке страницы
+// удаляем прелодер при загрузке страницы
 const contentFadeInOnReady = () => {
     $('.preloader').fadeOut(150, ()=>{
         $('.preloader').remove();
     });
 };
 
-// Открытие модальных окон
-const modalOpen = (trigger, modal) => {
-    $(trigger).on('click', function () {
-        // стопаем скролл у боди
-        stopScroll('body');
-        // показываем модалку
-        $(modal).addClass('active');
-    })
-}
-// Закрытие  модалок
-const modalClose = (btn = '.modal__close', modal = '.modal') =>{
-    $(btn).on('click', () => {
-        $(this).closest(modal).removeClass('active')
-        // возвращаем скролл для бади
-        $('body').attr("style", '');
+//навешиваем  обработчики открытия и закрытия на модалки
+const bindModalListeners = modalArr => {
+    modalArr.forEach(obj => {
+        let jQTrigger = $(obj.trigger);
+        let jQModal = $(obj.modal);
+
+        jQTrigger.on('click', function() {
+            stopScroll('body');
+            jQModal.addClass('active');
+        });
+
+        jQModal.on('click', function(e) {
+            if ($(e.target).hasClass('modal')) {
+                $(this).removeClass('active');
+                freeScroll();
+            }
+        });
+
+        jQModal.find('.modal__close').on('click', function() {
+            jQModal.removeClass('active');
+           freeScroll();
+        });
+
+        $(document).keydown((e) => {
+            if (e.keyCode === 27) {
+                $('.modal').removeClass('active');
+                freeScroll();
+                return false;
+            }
+        });
     });
 }
 
-// Закрытие модалок на  ESCAPE
-const closeOnEscape = () =>{
-    $(document).keydown((e) => {
-        // 27 = escape
-        if (e.keyCode === 27) {
-            $('.modal').removeClass('active')
-             // возвращаем скролл для бади
-            $('body').attr("style", '');
-            return false;
-        }
-    });
-}
-// Запрещаем скролл для бади 
-const stopScroll = (item) => {
+// Запрещаем скролл для body 
+function stopScroll(item='body') {
     let documentWidth = parseInt(document.documentElement.clientWidth),
         windowsWidth = parseInt(window.innerWidth),
         scrollbarWidth = windowsWidth - documentWidth;
     $(item).attr("style", 'overflow: hidden; padding-right: ' + scrollbarWidth + 'px');
 }
 
-// возвращаем скролл для бади
-const freeScroll = (item) => {
+// возвращаем скролл для body
+function freeScroll(item='body') {
     $(item).attr("style", '');
 }
 
 $().ready(() => {
     contentFadeInOnReady()
-    modalClose();
+    bindModalListeners([]);
 });
 
 
