@@ -14,8 +14,6 @@ html {
 
 body {
     font-family: $font; // FF MAIN
-    margin: 0;
-    padding: 0;
     cursor: default;
     background-color: $bgc;
     color: $gen;
@@ -32,12 +30,6 @@ p {
 
 ul {
     list-style: none;
-}
-
-.flexbox {
-    display: flex;
-    align-items: center;
-    align-self: center;
 }
 
 .wrappper {
@@ -118,7 +110,7 @@ input {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    @extend .flexbox;
+    @extend %flexbox;
     justify-content: center;
     //Вложенное окно с контентом, необходимо задать фиксированные размерыж
     &__box{

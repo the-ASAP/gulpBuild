@@ -1,5 +1,11 @@
 @import 'root';
 
+%flexbox {
+    display: flex;
+    align-items: center;
+    align-self: center;
+}
+
 // Стилизация скролбра
 %scrollbar::-webkit-scrollbar {
     width: .5%;

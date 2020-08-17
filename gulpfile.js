@@ -19,11 +19,10 @@ var gulp = require('gulp'),
     ftp = require('vinyl-ftp'),
     htmlImport = require('gulp-html-import'),
     reload = browserSync.reload;
+
 let deployJSON = null;
 try {
-    console.log('try');
     deployJSON = require('./deploy.json');
-
 } catch {
     console.log('error');
 }
@@ -31,6 +30,11 @@ try {
 gulp.task('clean', function(done) {
     done();
     return del.sync('build');
+});
+
+gulp.task('corr', function(done) {
+    done();
+    return del.sync(['build/components']);
 });
 //CSS
 gulp.task('buildSass', function() {
@@ -169,7 +173,8 @@ gulp.task('devbuild', gulp.series(
     'img',
     'buildFonts',
     'vendors',
-    'dest'
+    'dest',
+    'corr'
 ));
 //dev build
 //production build
@@ -200,10 +205,10 @@ gulp.task('webserver', function() {
     gulp.watch('src/fonts/*', gulp.series('buildFonts'));
     gulp.watch('src/img/**/*', gulp.series('img'));
     gulp.watch('src/vendors/**', gulp.series('vendors'));
-    gulp.watch(['./src/**/*', '!./src/sass/', '!./src/components',
-        '!./src/css',
-        '!./src/img',
-        '!./src/vendors',
+    gulp.watch(['./src/**/*', '!./src/sass/*', '!./src/components/*',
+        '!./src/css/*',
+        '!./src/img/*',
+        '!./src/vendors/*',
         '!./src/*.html'
     ], gulp.series('dest'));
 });
