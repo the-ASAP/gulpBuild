@@ -24,7 +24,7 @@ let deployJSON = null;
 try {
     deployJSON = require('./deploy.json');
 } catch {
-    console.log('error');
+    console.log('Deploy file is missing.');
 }
 
 gulp.task('clean', function(done) {
@@ -38,22 +38,22 @@ gulp.task('corr', function(done) {
 });
 //CSS
 gulp.task('buildSass', function() {
-    return gulp.src('src/sass/*.scss')
+    return gulp.src(['./src/sass/*.scss', '!./src/sass/root.scss', '!./src/sass/keyframes.scss', '!./src/sass/mixins.scss', '!./src/sass/media.scss'])
         .pipe(sass({ errLogToConsole: true }))
         .pipe(gcmq())
         .pipe(plumber())
-        .pipe(concatCss('main.css'))
+        // .pipe(concatCss('main.css'))
         .pipe(gulp.dest('src/css'));
 });
 gulp.task('buildCss', gulp.series('buildSass', function() {
     return gulp.src('src/css/*.css')
         .pipe(autoprefixer())
-        .pipe(concatCss('css/main.css'))
+        // .pipe(concatCss('css/main.css'))
         .pipe(cleanCss({
             compatibility: 'ie8',
             level: 2
         }))
-        .pipe(gulp.dest('build'))
+        .pipe(gulp.dest('build/css'))
         .pipe(reload({ stream: true }));
 }));
 gulp.task('sass:watch', function() {
