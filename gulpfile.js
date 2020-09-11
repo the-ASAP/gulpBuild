@@ -38,7 +38,7 @@ gulp.task('corr', function(done) {
 });
 //CSS
 gulp.task('buildSass', function() {
-    return gulp.src(['./src/sass/*.scss', '!./src/sass/root.scss', '!./src/sass/keyframes.scss', '!./src/sass/mixins.scss', '!./src/sass/media.scss'])
+    return gulp.src(['./src/sass/*.scss', '!./src/sass/root.scss', '!./src/sass/keyframes.scss', '!./src/sass/mixins.scss'])
         .pipe(sass({ errLogToConsole: true }))
         .pipe(gcmq())
         .pipe(plumber())
@@ -54,7 +54,9 @@ gulp.task('buildCss', gulp.series('buildSass', function() {
             level: 2
         }))
         .pipe(gulp.dest('build/css'))
-        .pipe(reload({ stream: true }));
+        .pipe(reload({ stream: true }))
+
+
 }));
 gulp.task('sass:watch', function() {
     return gulp.watch('src/sass/*.scss', ['sass']);
@@ -152,6 +154,49 @@ gulp.task('deploy', function() {
         return Promise.resolve();
     }
 });
+gulp.task('deployAll', function() {
+    if (deployJSON && deployJSON.host) {
+        let url = deployJSON.host.includes('//') ? deployJSON.host.slice(deployJSON.host.indexOf('//') + 2) :
+            deployJSON.host;
+        let connConfig = {
+            host: url || null,
+            user: deployJSON.user || null,
+            password: deployJSON.password || null,
+            parallel: 10,
+            log: gutil.log
+        }
+
+        let conn = ftp.create(connConfig)
+        let CSSglob = ['build/css/**/*'];
+        let JSglob = ['build/js/**/*'];
+        let vendorsGlob = ['build/vendors/**/*'];
+
+        const css = () => {
+            return gulp.src(CSSglob, { buffer: false })
+                .pipe(conn.dest(`/assets/templates/css`))
+        };
+
+        const js = () => {
+            return gulp.src(JSglob, { buffer: false })
+                .pipe(conn.dest(`/assets/templates/js`))
+        };
+
+        const vendors = () => {
+            return gulp.src(vendorsGlob, { buffer: false })
+                .pipe(conn.dest(`/assets/templates/vendors`))
+        }
+
+        css();
+        js();
+        vendors();
+        return Promise.resolve();
+
+    } else {
+        console.log('DEPLOY ALL IS NOT COMPLETE');
+        return Promise.resolve();
+    }
+});
+
 // end deploy
 // dest
 gulp.task('dest', function() {
@@ -174,7 +219,7 @@ gulp.task('devbuild', gulp.series(
     'buildFonts',
     'vendors',
     'dest',
-    'corr'
+    'corr',
 ));
 //dev build
 //production build
@@ -186,10 +231,35 @@ gulp.task('build', gulp.series(
     'imgmin',
     'vendors',
     'dest',
-    'deploy',
+
+    // 'deploy',
 ));
 //production build
 //webserver
+
+gulp.task('modxWebserver', function() {
+    browserSync.init({
+        server: {
+            baseDir: "./build"
+        },
+        port: 8080,
+        open: false,
+        notify: false
+    });
+    gulp.watch(['src/*.html', 'src/components/*'], gulp.series('buildHtml'));
+    gulp.watch('src/sass/*.scss', gulp.series('buildCss', 'deployAll'));
+    gulp.watch('src/js/*.js', gulp.series('buildJs', 'deployAll'));
+    gulp.watch('src/fonts/*', gulp.series('buildFonts'));
+    gulp.watch('src/img/**/*', gulp.series('img'));
+    gulp.watch('src/vendors/**', gulp.series('vendors', 'deployAll'));
+    gulp.watch(['./src/**/*', '!./src/sass/*', '!./src/components/*',
+        '!./src/css/*',
+        '!./src/img/*',
+        '!./src/vendors/*',
+        '!./src/*.html'
+    ], gulp.series('dest'));
+});
+
 gulp.task('webserver', function() {
     browserSync.init({
         server: {
@@ -200,7 +270,7 @@ gulp.task('webserver', function() {
         notify: false
     });
     gulp.watch(['src/*.html', 'src/components/*'], gulp.series('buildHtml'));
-    gulp.watch('src/sass/*.scss', gulp.series('buildCss'));
+    gulp.watch('src/sass/*.scss', gulp.series('buildCss', 'deployCSS'));
     gulp.watch('src/js/*.js', gulp.series('buildJs'));
     gulp.watch('src/fonts/*', gulp.series('buildFonts'));
     gulp.watch('src/img/**/*', gulp.series('img'));
@@ -218,6 +288,14 @@ gulp.task('default', gulp.series(
     'devbuild',
     'webserver'
 ));
+
+//modx
+gulp.task('modx', gulp.series(
+    'devbuild',
+    'deployAll',
+    'modxWebserver'
+));
+
 //prod compile
 gulp.task('prod', gulp.series(
     'clean',
