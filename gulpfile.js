@@ -270,7 +270,7 @@ gulp.task('webserver', function() {
         notify: false
     });
     gulp.watch(['src/*.html', 'src/components/*'], gulp.series('buildHtml'));
-    gulp.watch('src/sass/*.scss', gulp.series('buildCss', 'deployCSS'));
+    gulp.watch('src/sass/*.scss', gulp.series('buildCss'));
     gulp.watch('src/js/*.js', gulp.series('buildJs'));
     gulp.watch('src/fonts/*', gulp.series('buildFonts'));
     gulp.watch('src/img/**/*', gulp.series('img'));
