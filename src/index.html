@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -8,14 +9,69 @@
 	<meta name="keywords" content="ключевые, слова, через, запятую">
 	<link rel="shortcut icon" type='image/png' href="img/icons/favicon.ico" />
 	<title>Title</title>
-	<link rel="stylesheet" href="css/main.css" type="text/css">
+	<!-- <link rel="stylesheet" href="css/main.css" type="text/css"> -->
 </head>
+
 <body>
-	<div class="preloader"></div>
-	
-	<!-- TYPE YOUR HTML HERE -->
+	<style>
+		body {
+			overflow: hidden;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		.map {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 1440px;
+			transition: all .2s;
+		}
+	</style>
+	@import "map.html"
 
 	<script src="vendors/js/jquery-3.5.1.min.js"></script>
-	<script src="js/script.js"></script>
+	<!-- <script src="js/script.js"></script> -->
+	<script>
+		//moveset
+		let y,
+			x,
+			grab;
+		const event = (event, func) => window.addEventListener(event, func);
+
+		event('mousedown', (e) => {
+			y = e.pageY;
+			x = e.pageX;
+			grab = true;
+		})
+		event('mousemove', (e) => {
+			if (grab) {
+				window.scrollBy(x - e.pageX, y - e.pageY)
+			}
+		})
+		event('mouseup', (e) => {
+			grab = false;
+		})
+
+		//zoom
+		const map = document.querySelector('.map');
+		let size,
+			wheel = 1;
+
+		event('wheel', (e) => {
+			// wheel += e.deltaY;
+			wheel = wheel + (wheel * .1);
+			size = map.clientWidth;
+			
+			setInterval(() => {
+				map.style.transform = `scale(${wheel})`;
+			}, 500)
+		})
+	</script>
+
 </body>
+
 </html>

@@ -236,6 +236,11 @@ input:-webkit-autofill:focus {
   max-width: 100%;
 }
 
+.map {
+  width: 100%;
+  height: auto;
+}
+
 @media (max-width: 1600px) {
   html {
     font-size: 16px;
