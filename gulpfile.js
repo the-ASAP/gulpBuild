@@ -62,7 +62,7 @@ gulp.task('sass:watch', function() {
 //JS
 gulp.task('buildJs', function() {
     return gulp.src('src/js/*.js')
-        .pipe(concat('js/scripts.js'))
+        .pipe(concat('js/script.js'))
         .pipe(babel({
             presets: ['@babel/env']
         }))
